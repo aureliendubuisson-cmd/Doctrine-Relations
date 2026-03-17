@@ -35,6 +35,8 @@ class AppFixtures extends Fixture
             'arrivedAt' => new \DateTimeImmutable('-1 day'),
         ]);
 
+
+
         StarshipFactory::createOne([
             'name' => 'USS Espresso (NCC-1234-C)',
             'class' => 'Latte',
@@ -49,7 +51,15 @@ class AppFixtures extends Fixture
             'captain' => 'Kathryn Journeyway',
             'status' => StarshipStatusEnum::WAITING,
             'arrivedAt' => new \DateTimeImmutable('-1 month'),
-        ]);
+        ])->_real();
+
+        $starshipPart = StarshipPartFactory::createOne([
+            'name' => 'Toilet Paper',
+            'starship' => $ship,
+        ])->_real();
+        $ship->removePart($starshipPart);
+        $manager->flush();
+        dump($starshipPart);
 
         StarshipFactory::createMany(20);
         StarshipPartFactory::createMany(100);
