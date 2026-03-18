@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\StarshipPart;
 use App\Entity\StarshipStatusEnum;
+use App\Factory\DroidFactory;
 use App\Factory\StarshipFactory;
 use App\Factory\StarshipPartFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -53,15 +54,10 @@ class AppFixtures extends Fixture
             'arrivedAt' => new \DateTimeImmutable('-1 month'),
         ])->_real();
 
-        $starshipPart = StarshipPartFactory::createOne([
-            'name' => 'Toilet Paper',
-            'starship' => $ship,
-        ])->_real();
-        $ship->removePart($starshipPart);
-        $manager->flush();
-        dump($starshipPart);
+
 
         StarshipFactory::createMany(20);
         StarshipPartFactory::createMany(100);
+        DroidFactory::createMany(100);
     }
 }
