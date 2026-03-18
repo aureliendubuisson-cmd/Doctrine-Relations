@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\Persistence\ManagerRegistry;
+use function Symfony\Component\String\s;
 
 /**
  * @extends ServiceEntityRepository<StarshipPart>
@@ -37,17 +38,22 @@ class StarshipPartRepository extends ServiceEntityRepository
     }
 
         /**
+         * @param $search
          * @return StarshipPart[] Returns an array of StarshipPart objects
          */
-        public function findAllOrderedByPrice(): array
+        public function findAllOrderedByPrice( $search ): array
         {
-            return $this->createQueryBuilder('sp')
+            $qb = $this->createQueryBuilder('sp')
                 ->orderBy('sp.price', 'DESC')
                 ->innerJoin('sp.starship', 's')
                 ->addSelect('s')
-                ->getQuery()
-                ->getResult()
             ;
+
+            if ($search) {
+                $qb->andWhere('LOWER(sp.name) LIKE :search OR LOWER(sp.notes) LIKE :search')
+                ->setParameter('search', '%'. strtolower($search) . '%');
+            }
+            return $qb->getQuery()->getResult();
         }
 
     //    public function findOneBySomeField($value): ?StarshipPart
