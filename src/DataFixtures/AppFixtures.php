@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Droid;
 use App\Entity\StarshipStatusEnum;
+use App\Factory\DroidFactory;
 use App\Factory\StarshipFactory;
 use App\Factory\StarshipPartFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -20,26 +21,6 @@ class AppFixtures extends Fixture
             'status' => StarshipStatusEnum::IN_PROGRESS,
             'arrivedAt' => new \DateTimeImmutable('-1 day'),
         ]);
-        $droid1 = new Droid();
-        $droid1->setName('IHOP-123');
-        $droid1->setPrimaryFunction('Pancake chef');
-        $starship->addDroid($droid1);
-        $manager->persist($droid1);
-
-        $droid2 = new Droid();
-        $droid2->setName('D-3P0');
-        $droid2->setPrimaryFunction('C-3PO\'s voice coach');
-        $starship->addDroid($droid2);
-        $manager->persist($droid2);
-
-        $droid3 = new Droid();
-        $droid3->setName('BONK-5000');
-        $droid3->setPrimaryFunction('Comedy sidekick');
-        $starship->addDroid($droid3);
-        $manager->persist($droid3);
-        $manager->flush();
-
-        $starship->removeDroid($droid1);
 
         StarshipFactory::createOne([
             'name' => 'USS Espresso (NCC-1234-C)',
@@ -64,7 +45,10 @@ class AppFixtures extends Fixture
         $ship->removePart($starshipPart);
         $manager->flush();
 
-        StarshipFactory::createMany(20);
+        DroidFactory::createMany(100);
+        StarshipFactory::createMany(100, fn() => [
+            'droids' => DroidFactory::randomRange(1, 5),
+        ]);
         StarshipPartFactory::createMany(100);
     }
 }
