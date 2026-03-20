@@ -8,12 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: StarshipDroidRepository::class)]
 class StarshipDroid
 {
+
+    public function __construct()
+    {
+        $this->assignedAt = new \DateTimeImmutable();
+    }
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $assignedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'starshipDroids')]
@@ -23,11 +28,6 @@ class StarshipDroid
     #[ORM\ManyToOne(inversedBy: 'starshipDroids')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Starship $starship = null;
-
-    public function __construct()
-    {
-        $this->assignedAt = new \DateTimeImmutable();
-    }
 
     public function getId(): ?int
     {
