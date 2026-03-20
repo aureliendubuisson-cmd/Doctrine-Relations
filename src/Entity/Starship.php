@@ -51,7 +51,7 @@ class Starship
     /**
      * @var Collection<int, StarshipDroid>
      */
-    #[ORM\OneToMany(targetEntity: StarshipDroid::class, mappedBy: 'starship')]
+    #[ORM\OneToMany(targetEntity: StarshipDroid::class, mappedBy: 'starship', cascade: ['persist'])]
     private Collection $starshipDroids;
 
     public function __construct()
@@ -207,8 +207,11 @@ class Starship
 
     public function addDroid(Droid $droid): static
     {
-        if (!$this->droids->contains($droid)) {
-            $this->droids->add($droid);
+        if (!$this->getDroids()->contains($droid)) {
+            $starshipDroid = new StarshipDroid();
+            $starshipDroid->setDroid($droid);
+            $starshipDroid->setStarship($this);
+            $this->starshipDroids->add($starshipDroid);
         }
 
         return $this;
