@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Droid;
+use App\Entity\Starship;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use http\QueryString;
 
 /**
  * @extends ServiceEntityRepository<Droid>
@@ -15,6 +18,18 @@ class DroidRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Droid::class);
     }
+
+    public function getDroidsByStarship(Starship $starship): array
+    {
+        return $this->createQueryBuilder('d')
+            ->join('d.starships', 's')
+            ->where('s.id = :straship')
+            ->setParameter('straship', $starship)
+            ->getQuery()
+            ->getResult();
+    }
+
+
 
     //    /**
     //     * @return Droid[] Returns an array of Droid objects

@@ -27,9 +27,16 @@ class Droid
     #[ORM\OneToMany(targetEntity: StarshipDroid::class, mappedBy: 'droid')]
     private Collection $starshipDroids;
 
+    /**
+     * @var Collection<int, Starship>
+     */
+    #[ORM\ManyToMany(targetEntity: Starship::class, mappedBy: 'droids')]
+    private Collection $starships;
+
     public function __construct()
     {
         $this->starshipDroids = new ArrayCollection();
+        $this->starships = new ArrayCollection();
     }
 
     public function getId(): ?int
